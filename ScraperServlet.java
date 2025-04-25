@@ -8,6 +8,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -15,6 +16,15 @@ import java.util.List;
 
 public class ScraperServlet extends HttpServlet {
     public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
+        res.setContentType("text/html");
+        PrintWriter out = res.getWriter();
+
+        HttpSession session = req.getSession();
+        Integer visitCount = (Integer) session.getAttribute("visitCount");
+        if (visitCount == null) visitCount = 0;
+        visitCount++;
+        session.setAttribute("visitCount", visitCount);
+
         String url = req.getParameter("url");
         boolean getTitle = req.getParameter("title") != null;
         boolean getLinks = req.getParameter("links") != null;
@@ -63,7 +73,6 @@ public class ScraperServlet extends HttpServlet {
                 out.println("    csv += 'Image,\"' + " + escapeJS(img) + " + '\"\\n';");
             }
         }
-
         out.println("    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });");
         out.println("    const url = URL.createObjectURL(blob);");
         out.println("    const link = document.createElement('a');");
@@ -77,6 +86,8 @@ public class ScraperServlet extends HttpServlet {
 
         out.println("</head><body>");
         out.println("<h2>Scraped Results</h2>");
+
+        out.println("<p>You have visited this page <strong>" + visitCount + "</strong> times.</p>");
 
         out.println("<table border='1'>");
         out.println("<tr><th>Type</th><th>Data</th></tr>");
