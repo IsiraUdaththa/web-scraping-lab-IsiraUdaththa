@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app>
+
+    <servlet>
+        <servlet-name>servlet_1</servlet-name>
+        <servlet-class>ScrapingServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>servlet_1</servlet-name>
+        <url-pattern>/WebScrapingLab</url-pattern>
+    </servlet-mapping>
+    
+</web-app>
